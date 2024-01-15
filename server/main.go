@@ -15,8 +15,8 @@ const (
 )
 
 type server struct {
-	pb.PingServer
-	pb.ChatServer
+	pb.UnimplementedPingServer
+	pb.UnimplementedChatServer
 }
 
 func (s *server) PingPong(ctx context.Context, req *pb.PingRequest) (*pb.PongResponse, error) {
