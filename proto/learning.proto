@@ -1,0 +1,12 @@
+// syntax = "proto3";
+
+// option go_package = "./pb";
+
+// package learning;
+
+
+// import "./ping.proto";
+
+// service Learning {
+//     rpc PingPong(PingRequest) returns (PongResponse) {};
+// }
