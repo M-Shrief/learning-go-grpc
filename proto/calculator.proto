@@ -5,7 +5,8 @@ option go_package = "./pb";
 package calculator;
 
 service Calculator {
-    rpc ComputeAverage(stream ComputeAverageRequest) returns (ComputeAverageResponse) {}
+    rpc ComputeAverage(stream ComputeAverageRequest) returns (ComputeAverageResponse) {};
+    rpc PrimeNumberDecomposition(PrimeNumberDecompositionRequest) returns (stream PrimeNumberDecompositionResponse) {};
 }
 
 message ComputeAverageRequest {
@@ -14,4 +15,12 @@ message ComputeAverageRequest {
 
 message ComputeAverageResponse {
     double average = 1;
+}
+
+message PrimeNumberDecompositionRequest {
+    int64 number = 1;
+}
+
+message PrimeNumberDecompositionResponse {
+    int64 prime_factor = 1;
 }

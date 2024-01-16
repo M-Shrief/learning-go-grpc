@@ -47,6 +47,27 @@ func computeAverage(client pb.CalculatorClient) {
 	log.Printf("The Average is: %v\n", res.GetAverage())
 }
 
+func primeNumberDecomposition(client pb.CalculatorClient) {
+	log.Println("Starting to do a PrimeDecomposition Server Streaming RPC...")
+	req := &pb.PrimeNumberDecompositionRequest{Number: 12390392840}
+
+	stream, err := client.PrimeNumberDecomposition(context.Background(), req)
+	if err != nil {
+		log.Fatalf("error while calling PrimeDecomposition RPC: %v", err)
+	}
+
+	for {
+		res, err := stream.Recv()
+		if err == io.EOF {
+			break
+		}
+		if err != nil {
+			log.Fatalf("Error: %v", err)
+		}
+		log.Println("Prime Factor: %v", res.GetPrimeFactor())
+	}
+}
+
 func chat(client pb.ChatClient) {
 	log.Printf("Bidirectional Streaming started")
 	stream, err := client.Chat(context.Background())
@@ -102,5 +123,6 @@ func main() {
 	// chat(client2)
 
 	client3 := pb.NewCalculatorClient(con)
-	computeAverage(client3)
+	// computeAverage(client3)
+	primeNumberDecomposition(client3)
 }

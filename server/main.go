@@ -48,6 +48,24 @@ func (s *server) ComputeAverage(stream pb.Calculator_ComputeAverageServer) error
 	}
 }
 
+func (s *server) PrimeNumberDecomposition(req *pb.PrimeNumberDecompositionRequest, stream pb.Calculator_PrimeNumberDecompositionServer) error {
+	log.Printf("Received PrimeNumberDecomposition RPC: %v\n", req)
+
+	number := req.GetNumber()
+	divisor := int64(2)
+
+	for number > 1 {
+		if number%divisor == 0 {
+			stream.Send(&pb.PrimeNumberDecompositionResponse{PrimeFactor: divisor})
+			number = number / divisor
+		} else {
+			divisor++
+			log.Printf("Divisor has increased to %v\n", divisor)
+		}
+	}
+	return nil
+}
+
 func (s *server) Chat(stream pb.Chat_ChatServer) error {
 	for {
 		req, err := stream.Recv()
