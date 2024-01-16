@@ -15,7 +15,7 @@ const (
 	port = ":8080"
 )
 
-func clientPing(client pb.PingClient) {
+func ping(client pb.PingClient) {
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
 	defer cancel()
 
@@ -27,7 +27,27 @@ func clientPing(client pb.PingClient) {
 	log.Printf("%s", res.Message)
 }
 
-func clientChat(client pb.ChatClient) {
+func computeAverage(client pb.CalculatorClient) {
+	log.Println("Starting to do a ComputeAverage Client Streaming RPC...")
+
+	stream, err := client.ComputeAverage(context.Background())
+	if err != nil {
+		log.Fatalf("Error while opening stream: %v", err)
+	}
+
+	for _, number := range []int32{3, 5, 7, 9, 54, 76} {
+		log.Printf("Sending number: %v\n", number)
+		stream.Send(&pb.ComputeAverageRequest{Number: number})
+	}
+
+	res, err := stream.CloseAndRecv()
+	if err != nil {
+		log.Fatalf("Error while receiving response: %v", err)
+	}
+	log.Printf("The Average is: %v\n", res.GetAverage())
+}
+
+func chat(client pb.ChatClient) {
 	log.Printf("Bidirectional Streaming started")
 	stream, err := client.Chat(context.Background())
 	if err != nil {
@@ -74,10 +94,13 @@ func main() {
 	}
 	defer con.Close()
 
-	client := pb.NewPingClient(con)
+	// client := pb.NewPingClient(con)
 
-	clientPing(client)
+	// ping(client)
 
-	client2 := pb.NewChatClient(con)
-	clientChat(client2)
+	// client2 := pb.NewChatClient(con)
+	// chat(client2)
+
+	client3 := pb.NewCalculatorClient(con)
+	computeAverage(client3)
 }

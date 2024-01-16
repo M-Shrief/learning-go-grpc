@@ -1,0 +1,17 @@
+syntax = "proto3";
+
+option go_package = "./pb";
+
+package calculator;
+
+service Calculator {
+    rpc ComputeAverage(stream ComputeAverageRequest) returns (ComputeAverageResponse) {}
+}
+
+message ComputeAverageRequest {
+    int32 number = 1;
+}
+
+message ComputeAverageResponse {
+    double average = 1;
+}
